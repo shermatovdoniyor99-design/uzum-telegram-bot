@@ -2,7 +2,7 @@ import requests
 import os
 
 UZUM_API_KEY = os.getenv("UZUM_API_KEY")
-SHOP_ID = 54161 , 64857
+SHOP_ID = [54161, 64857]
 
 def get_orders():
 
@@ -22,10 +22,12 @@ def get_orders():
 
     data = r.json()
 
-    orders = data["payload"]["orders"]
+    orders = data.get("payload", {}).get("orders", [])
 
     return orders
-    def get_report():
+
+
+def get_report():
 
     orders = get_orders()
 
@@ -33,10 +35,10 @@ def get_orders():
     revenue = 0
 
     for o in orders:
-        price = o["items"][0]["price"]
-        qty = o["items"][0]["quantity"]
-
-        revenue += price * qty
+        for item in o["items"]:
+            price = item["price"]
+            qty = item["quantity"]
+            revenue += price * qty
 
     return f"""
 📊 Uzum hisoboti
@@ -44,7 +46,6 @@ def get_orders():
 📦 Buyurtmalar: {total_orders}
 💰 Tushum: {revenue} so'm
 """
-    def check_updates():
 
-    if text == "/sales":
-        send(get_report())
+
+print(get_report())
