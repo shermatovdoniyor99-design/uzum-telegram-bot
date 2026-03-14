@@ -13,7 +13,10 @@ last_update = 0
 
 def send(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, data={"chat_id": CHAT_ID, "text": text})
+    requests.post(url, json={
+        "chat_id": CHAT_ID,
+        "text": text
+    })
 
 
 def get_orders():
@@ -73,6 +76,7 @@ def check_updates():
         update_id = update["update_id"]
 
         if update_id > last_update:
+
             last_update = update_id
 
             if "message" in update:
@@ -86,12 +90,10 @@ def check_updates():
                     send(get_report())
 
 
-send("🚀 Uzum analytics bot ishga tushdi!")
-
 while True:
     try:
         check_updates()
     except Exception as e:
-        print("Error:", e)
+        print(e)
 
-    time.sleep(5)
+    time.sleep(3)
