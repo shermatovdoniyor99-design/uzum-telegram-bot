@@ -8,10 +8,10 @@ def get_orders():
 
     url = "https://api-seller.uzum.uz/api/seller-openapi/v2/fbs/orders"
 
- headers = {
-    "Authorization": f"Bearer {UZUM_API_KEY}",
-    "Accept": "application/json"
-}
+    headers = {
+        "Authorization": f"Bearer {UZUM_API_KEY}",
+        "Accept": "application/json"
+    }
 
     params = {
         "shopIds": SHOP_ID,
