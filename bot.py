@@ -13,20 +13,30 @@ def send(text):
     requests.post(url, data={"chat_id": CHAT_ID, "text": text})
 
 def get_sales():
-    url = "https://api.uzum.uz/seller-api/v1/orders"
+    url = "https://api-seller.uzum.uz/api/seller-openapi/v1/orders"
 
     headers = {
-        "Authorization": f"Bearer {UZUM_API_KEY}"
+        "Authorization": f"Bearer {UZUM_API_KEY}",
+        "Content-Type": "application/json"
     }
 
-    r = requests.get(url, headers=headers)
+    params = {
+        "page": 0,
+        "size": 50
+    }
+
+    r = requests.get(url, headers=headers, params=params)
 
     if r.status_code == 200:
         data = r.json()
-        count = len(data)
+
+        orders = data.get("content", [])
+        count = len(orders)
+
         return f"📦 Bugungi buyurtmalar: {count}"
+
     else:
-        return f"❌ API xato: {r.status_code}"
+        return f"❌ API xato: {r.status_code}\n{r.text}"
 
 def check_updates():
     global last_update
