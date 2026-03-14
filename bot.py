@@ -13,7 +13,8 @@ def send(text):
     requests.post(url, data={"chat_id": CHAT_ID, "text": text})
 
 def get_sales():
-    url = "https://api-seller.uzum.uz/api/seller-openapi/v1/orders"
+
+    url = "https://api-seller.uzum.uz/seller-openapi/v1/orders"
 
     headers = {
         "Authorization": f"Bearer {UZUM_API_KEY}",
@@ -37,7 +38,9 @@ def get_sales():
 
     else:
         return f"❌ API xato: {r.status_code}\n{r.text}"
-
+print(r.url)
+print(r.status_code)
+print(r.text)
 def check_updates():
     global last_update
 
