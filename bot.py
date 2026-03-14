@@ -14,11 +14,10 @@ def send(text):
 
 def get_sales():
 
-    url = "https://api-seller.uzum.uz/api/seller-openapi/v1/order
+    url = "https://api-seller.uzum.uz/api/seller-openapi/v2/fbs/orders"
 
     headers = {
-        "Authorization": f"Bearer {UZUM_API_KEY}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {UZUM_API_KEY}"
     }
 
     params = {
@@ -34,7 +33,7 @@ def get_sales():
         orders = data.get("content", [])
         count = len(orders)
 
-        return f"📦 Buyurtmalar: {count}"
+        return f"📦 Buyurtmalar soni: {count}"
 
     else:
         return f"❌ API xato: {r.status_code}\n{r.text}"
