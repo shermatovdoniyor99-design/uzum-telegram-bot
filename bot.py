@@ -8,7 +8,8 @@ UZUM_API_KEY = os.getenv("UZUM_API_KEY")
 
 SHOP_ID = [54161, 64857]
 
-last_update = 0
+previous_orders = 0
+previous_revenue = 0
 
 
 def send(text):
@@ -43,7 +44,7 @@ def get_orders():
     return orders
 
 
-def get_report():
+def get_stats():
 
     orders = get_orders()
 
@@ -56,44 +57,39 @@ def get_report():
             qty = item["quantity"]
             revenue += price * qty
 
-    return f"""
-📊 Uzum Analytics
-
-📦 Buyurtmalar: {total_orders}
-💰 Tushum: {revenue} so'm
-"""
+    return total_orders, revenue
 
 
-def check_updates():
-
-    global last_update
-
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates"
-    r = requests.get(url).json()
-
-    for update in r["result"]:
-
-        update_id = update["update_id"]
-
-        if update_id > last_update:
-
-            last_update = update_id
-
-            if "message" in update:
-
-                text = update["message"].get("text", "")
-
-                if text == "/start":
-                    send("🤖 Uzum Analytics Bot ishlayapti!\n/sales - Bugungi savdo")
-
-                if text == "/sales":
-                    send(get_report())
-
+send("🚀 Uzum Analytics bot ishga tushdi")
 
 while True:
-    try:
-        check_updates()
-    except Exception as e:
-        print(e)
 
-    time.sleep(3)
+    try:
+
+        total_orders, revenue = get_stats()
+
+        global previous_orders
+        global previous_revenue
+
+        new_orders = total_orders - previous_orders
+        new_revenue = revenue - previous_revenue
+
+        report = f"""
+📊 Soatlik Uzum hisoboti
+
+🆕 Yangi buyurtmalar: {new_orders}
+💰 Yangi tushum: {new_revenue} so'm
+
+📦 Jami buyurtmalar: {total_orders}
+💵 Jami tushum: {revenue} so'm
+"""
+
+        send(report)
+
+        previous_orders = total_orders
+        previous_revenue = revenue
+
+    except Exception as e:
+        send(f"❌ Xato: {e}")
+
+    time.sleep(3600)
