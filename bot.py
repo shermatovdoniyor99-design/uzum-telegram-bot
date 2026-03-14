@@ -28,8 +28,9 @@ def get_sales():
 
     r = requests.get(url, headers=headers, params=params)
     print(r.url)
-print(r.status_code)
-print(r.text)
+    print(r.status_code)
+    print(r.text)
+    
     if r.status_code == 200:
         data = r.json()
 
