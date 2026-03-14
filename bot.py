@@ -17,7 +17,7 @@ def get_sales():
     url = "https://api-seller.uzum.uz/api/seller-openapi/v2/fbs/orders"
 
     headers = {
-        "Authorization": f"Bearer {UZUM_API_KEY}"
+        "X-API-Key": UZUM_API_KEY
     }
 
     params = {
@@ -36,7 +36,7 @@ def get_sales():
         return f"📦 Buyurtmalar soni: {count}"
 
     else:
-        return f"❌ API xato: {r.status_code}\n{r.text}"
+        return f"❌ API xato: {r.status_code}"
 
 def check_updates():
     global last_update
