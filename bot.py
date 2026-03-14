@@ -19,7 +19,7 @@ def send(text):
 
 def get_orders():
 
-    url = "https://api-seller.uzum.uz/api/seller-openapi/v2/fbs/orders"
+    url = "https://api-seller.uzum.uz/api/seller-openapi/v1/finance/orders"
 
     headers = {
         "Authorization": f"Bearer {UZUM_API_KEY}",
