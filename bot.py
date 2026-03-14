@@ -12,19 +12,19 @@ def send(text):
 
 def get_sales():
     url = "https://api.uzum.uz/seller-api/v1/orders"
-    
+
     headers = {
-        "Authorization": UZUM_API_KEY
+        "Authorization": f"Bearer {UZUM_API_KEY}"
     }
 
     r = requests.get(url, headers=headers)
-    
+
     if r.status_code == 200:
         data = r.json()
         count = len(data)
         return f"📦 Bugungi buyurtmalar: {count}"
     else:
-        return "❌ Uzum API dan ma'lumot olinmadi"
+        return f"❌ API xato: {r.status_code}"
 
 send("🚀 Uzum analytics bot ishga tushdi!")
 
