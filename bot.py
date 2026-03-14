@@ -1,66 +1,35 @@
-import os
 import requests
-import time
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
-UZUM_API_KEY = os.getenv("UZUM_API_KEY")
+UZUM_API_KEY = "API_KEYINGIZ"
 
-last_update = 0
-
-def send(text):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, data={"chat_id": CHAT_ID, "text": text})
-
-def get_sales():
+def get_report():
 
     url = "https://api-seller.uzum.uz/api/seller-openapi/v2/fbs/orders"
 
     headers = {
-        "X-API-Key": UZUM_API_KEY
+        "Authorization": f"Bearer {UZUM_API_KEY}"
     }
 
-    params = {
-        "page": 0,
-        "size": 50
-    }
+    r = requests.get(url, headers=headers)
 
-    r = requests.get(url, headers=headers, params=params)
+    data = r.json()
 
-    if r.status_code == 200:
-        data = r.json()
+    orders = data["content"]
 
-        orders = data.get("content", [])
-        count = len(orders)
+    total_orders = len(orders)
+    revenue = 0
 
-        return f"📦 Buyurtmalar soni: {count}"
+    for o in orders:
+        price = o["price"]
+        qty = o["quantity"]
 
-    else:
-        return f"❌ API xato: {r.status_code}"
+        revenue += price * qty
 
-def check_updates():
-    global last_update
+    return f"""
+📊 Bugungi statistika
 
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates"
-    r = requests.get(url).json()
+Buyurtmalar: {total_orders}
+Tushum: {revenue} so'm
+"""
 
-    for update in r["result"]:
-        update_id = update["update_id"]
-
-        if update_id > last_update:
-            last_update = update_id
-
-            if "message" in update:
-                text = update["message"].get("text", "")
-
-                if text == "/start":
-                    send("🤖 Uzum Analytics Bot ishlayapti!\n/sales - Bugungi savdo")
-
-                if text == "/sales":
-                    send(get_sales())
-
-send("🚀 Uzum analytics bot ishga tushdi!")
-
-while True:
-    check_updates()
-    time.sleep(60)
+print(get_report())
