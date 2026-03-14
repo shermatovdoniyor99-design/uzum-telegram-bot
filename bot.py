@@ -14,7 +14,7 @@ def send(text):
 
 def get_sales():
 
-    url = "https://api-seller.uzum.uz/seller-openapi/v1/orders"
+    url = "https://api-seller.uzum.uz/api/seller-openapi/v1/shipments"
 
     headers = {
         "Authorization": f"Bearer {UZUM_API_KEY}",
@@ -27,15 +27,12 @@ def get_sales():
     }
 
     r = requests.get(url, headers=headers, params=params)
-    print(r.url)
-    print(r.status_code)
-    print(r.text)
-    
+
     if r.status_code == 200:
         data = r.json()
 
-        orders = data.get("content", [])
-        count = len(orders)
+        shipments = data.get("content", [])
+        count = len(shipments)
 
         return f"📦 Bugungi buyurtmalar: {count}"
 
