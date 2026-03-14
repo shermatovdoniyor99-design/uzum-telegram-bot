@@ -63,4 +63,4 @@ send("🚀 Uzum analytics bot ishga tushdi!")
 
 while True:
     check_updates()
-    time.sleep(5)
+    time.sleep(60)
